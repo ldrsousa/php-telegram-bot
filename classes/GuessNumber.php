@@ -24,7 +24,7 @@ class GuessNumber extends Bot
 
 		file_put_contents($this->filename, serialize($this->game));
 
-		return 'Game started!' . chr(10) . 'Lives: ' . $this->game->lives . chr(10) . 'Guess a number between 1 and 50 with /gn &lt;number&gt;';
+		return 'Game started!' . chr(10) . 'Lives: ' . $this->game->lives . chr(10) . 'Guess a number between 1 and 50 with "/gn <number>"';
 	}
 
 	public function stop()
