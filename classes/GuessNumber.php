@@ -71,7 +71,7 @@ class GuessNumber extends Bot
 	private function end()
 	{
 		if (--$this->game->lives === 0) {
-			$answer = 'Game over... You loose!';
+			$answer = 'Game over... You loose, the number was ' . $this->game->number . '!';
 		} else {
 			$answer = 'RIGHT!!! You win the game!';
 		}
