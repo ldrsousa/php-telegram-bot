@@ -7,12 +7,12 @@ class Server extends Bot
 		parent::__construct($conf, $chat_id);
 	}
 
-	private function uptime()
+	public function uptime()
 	{
 		return "Server uptime:". exec('uptime');
 	}
 
-	private function uname()
+	public function uname()
 	{
 		return exec('uname -a');
 	}

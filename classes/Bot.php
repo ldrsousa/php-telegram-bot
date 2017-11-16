@@ -74,12 +74,12 @@ class Bot
 
 	private function games()
 	{
-		$message = "<strong>GuessNumber</strong>" . chr(10);
+		$message = "GuessNumber>" . chr(10);
 		$message .= "Game to guess a number between 1 and 50" . chr(10) . chr(10);
-		$message .= "/guessnumber &lt;command&gt; ou /gn &lt;command&gt;" . chr(10);
+		$message .= "/guessnumber <command> ou /gn <command>" . chr(10);
 		$message .= "  start - Start the game" . chr(10);
 		$message .= "  stop  - Stop the game" . chr(10);
-		$message .= "  &lt;number&gt; - Guess a number";
+		$message .= "  <number> - Guess a number";
 
 		return $message;
 	}
