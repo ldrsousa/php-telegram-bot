@@ -56,13 +56,19 @@ $str = explode(' ', trim($message));
 $command = ltrim($str[0], '/');
 $arg = isset($str[1]) ? $str[1] : '';
 
-if ($command === 'server') {
-	$hook = new Server($conf, $chat_id);
-} else if ($command === 'guessnumber' || $command === 'gn') {
-	$hook = new GuessNumber($conf, $chat_id);
-} else {
-	$hook = new Bot($conf, $chat_id);
+switch ($command) {
+	case 'server':
+		$class = 'Server';
+		break;
+	case 'guessnumber':
+	case 'gn':
+		$class = 'GuessNumber';
+		break;
+	default:
+		$class = 'Bot';
 }
+
+$hook = new $class($conf, $chat_id);
 
 if (!$hook->isTrusted()) {
 	$hook->execute('unauthorized');
