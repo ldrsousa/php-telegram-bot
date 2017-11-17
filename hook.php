@@ -45,6 +45,8 @@ $arguments = [
 	'guessnumber'=>[
 		'start',
 		'stop',
+		'guess',
+		'g', // alias for guess
 	],
 	'gn'=>[ // alias for guessnumber
 		'start',
