@@ -28,34 +28,17 @@ class Bot
 		return false;
 	}
 
-	private function log($message)
+	public function log($message)
 	{
 		error_log(date("Y-m-d H:i:s") . " - " . $message . "\n", 3, 'log.log');
 	}
 
-	public function execute($command, $arg = '')
+	public function send($message)
 	{
-		if ($command === 'unauthorized') {
-			$message = "You are not authorized to use commands in this bot!";
-		} else if ($command === 'unknown') {
-			$message = "Unknown command, try /help to see a list of commands";
-		} else {
-			if ($command === 'guess') {
-				$message = $this->{$command}($arg);
-			} else if ($arg !== '') {
-				$message = $this->{$arg}();
-			} else {
-				$message = $this->{$command}();
-			}
-		}
+		$text = trim($message);
 
-		$this->send($message);
-	}
-
-	private function send($message)
-	{
-		if (strlen($message) > 0) {
-			$send = $this->api_url . "/sendmessage?chat_id=" . $this->chat_id . "&text=" . urlencode($message);
+		if (strlen(trim($text)) > 0) {
+			$send = $this->api_url . "/sendmessage?chat_id=" . $this->chat_id . "&text=" . urlencode($text);
 			file_get_contents($send);
 			return true;
 		}
@@ -63,24 +46,35 @@ class Bot
 		return false;
 	}
 
-	private function help()
+	public function help()
 	{
 		$message = "/server uptime" . chr(10) . "  - Retrieves the uptime of the server" . chr(10) . chr(10);
 		$message .= "/server uname" . chr(10) . "  - Retrieves the server name, build and kernel" . chr(10) . chr(10);
+		$message .= "/server calc" . chr(10) . "  - Do simple math calc, like: 1 + 1" . chr(10) . chr(10);
 		$message .= "/games" . chr(10) . "  - Retrieves the games available in this bot";
 
-		return $message;
+		return $this->send($message);
 	}
 
-	private function games()
+	public function games()
 	{
-		$message = "GuessNumber>" . chr(10);
+		$message = "GuessNumber" . chr(10);
 		$message .= "Game to guess a number between 1 and 50" . chr(10) . chr(10);
 		$message .= "/guessnumber <command> ou /gn <command>" . chr(10);
 		$message .= "  start - Start the game" . chr(10);
 		$message .= "  stop  - Stop the game" . chr(10);
-		$message .= "  <number> - Guess a number";
+		$message .= "  g <number> - Guess a number";
 
-		return $message;
+		return $this->send($message);
+	}
+
+	public function unauthorized()
+	{
+		return $this->send("You are not authorized to use commands in this bot!");
+	}
+
+	public function unknown()
+	{
+		return $this->send("Unknown command, try /help to see a list of commands");
 	}
 }

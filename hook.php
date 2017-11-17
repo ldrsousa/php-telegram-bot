@@ -5,7 +5,7 @@
  * A simple code to create a bot to telegram application
  *
  * Author: waterblue
- * Date: 2017/11/16
+ * Date: 2017/11/17
  */
 
 include_once "conf.php";
@@ -20,7 +20,7 @@ $chat_id = $update['message']['chat']['id'];
 $message = $update['message']['text'];
 
 // Available bot commands
-$commands = array(
+$commands = [
 	// General Commands
 	'help',
 	'games',
@@ -31,30 +31,36 @@ $commands = array(
 	// Games
 	'guessnumber',
 	'gn', // alias for guessnumber
-);
+];
 
-$arguments = array(
+$arguments = [
 	// Server
-	'server'=>array(
+	'server'=>[
 		'uptime',
 		'uname',
-	),
+		'calc',
+	],
 
 	// Games
-	'guessnumber'=>array(
+	'guessnumber'=>[
 		'start',
 		'stop',
-	),
-	'gn'=>array( // alias for guessnumber
+	],
+	'gn'=>[ // alias for guessnumber
 		'start',
 		'stop',
-	),
-);
+		'guess',
+		'g', // alias for guess
+	],
+];
 
-$str = explode(' ', trim($message));
+$args = explode(' ', trim($message));
 
-$command = ltrim($str[0], '/');
-$arg = isset($str[1]) ? $str[1] : '';
+$command = ltrim(array_shift($args), '/');
+$method = '';
+if (isset($args[0]) && in_array($args[0], $arguments[$command])) {
+	$method = array_shift($args);
+}
 
 switch ($command) {
 	case 'server':
@@ -71,33 +77,21 @@ switch ($command) {
 $hook = new $class($conf, $chat_id);
 
 if (!$hook->isTrusted()) {
-	$hook->execute('unauthorized');
+	$hook->unauthorized();
 	die();
 }
 
 if (!in_array($command, $commands)) {
-	$hook->execute('unknown');
+	$hook->unknown();
 }
 
 else {
-	if (isset($arguments[$command])) {
-
-		foreach ($arguments[$command] as $a) {
-			if ($a === $arg) {
-				$hook->execute($command, $arg);
-				die();
-			}
-		}
-
-		if (($command === 'guessnumber' || $command === 'gn') && intval($arg) > 0) {
-			$hook->execute('guess', intval($arg));
-			die();
-		}
-
-		$hook->execute('unknown');
-	}
-
-	else {
-		$hook->execute($command);
+	if (isset($arguments[$command]) && in_array($method, $arguments[$command])) {
+		$hook->{$method}($args);
+		die();
+	} else if (in_array($command, $commands)) {
+		$hook->{$command}($args);
+	} else {
+		$hook->unknown();
 	}
 }

@@ -9,11 +9,26 @@ class Server extends Bot
 
 	public function uptime()
 	{
-		return "Server uptime:". exec('uptime');
+		return $this->send("Server uptime:". exec('uptime'));
 	}
 
 	public function uname()
 	{
-		return exec('uname -a');
+		return $this->send(exec('uname -a'));
+	}
+
+	public function calc($args)
+	{
+		$calc = [];
+
+		foreach ($args as $a) {
+			if ($a === '*' || $a === 'x') {
+				$calc[] = '\\*';
+			} else {
+				$calc[] = $a;
+			}
+		}
+
+		return $this->send(exec("expr " . implode(' ', $calc)));
 	}
 }

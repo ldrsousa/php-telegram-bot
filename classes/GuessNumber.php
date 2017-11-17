@@ -24,23 +24,25 @@ class GuessNumber extends Bot
 
 		file_put_contents($this->filename, serialize($this->game));
 
-		return 'Game started!' . chr(10) . 'Lives: ' . $this->game->lives . chr(10) . 'Guess a number between 1 and 50 with "/gn <number>"';
+		return $this->send('Game started!' . chr(10) . 'Lives: ' . $this->game->lives . chr(10) . 'Guess a number between 1 and 50 with "/gn g <number>"');
 	}
 
 	public function stop()
 	{
 		if (is_file($this->filename)) {
 			unlink($this->filename);
-			return 'Game is stopped! Come back later...';
+			return $this->send('Game is stopped! Come back later...');
 		} else {
-			return 'Game is not started!';
+			return $this->send('Game is not started!');
 		}
 	}
 
-	public function guess($number)
+	public function guess($args)
 	{
+		$number = intval($args[0]);
+
 		if (!is_file($this->filename)) {
-			return 'Game is not started!';
+			return $this->send('Game is not started!');
 		} else {
 			$this->game = unserialize(file_get_contents($this->filename));
 		}
@@ -65,7 +67,12 @@ class GuessNumber extends Bot
 
 		file_put_contents($this->filename, serialize($this->game));
 
-		return $answer;
+		return $this->send($answer);
+	}
+
+	public function g($args) // alias for guess
+	{
+		return self::guess($args);
 	}
 
 	private function end()
@@ -80,6 +87,6 @@ class GuessNumber extends Bot
 			unlink($this->filename);
 		}
 
-		return $answer;
+		return $this->send($answer);
 	}
 }
