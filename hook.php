@@ -48,13 +48,9 @@ $arguments = [
 		'guess',
 		'g', // alias for guess
 	],
-	'gn'=>[ // alias for guessnumber
-		'start',
-		'stop',
-		'guess',
-		'g', // alias for guess
-	],
 ];
+
+$arguments['gn'] = $arguments['guessnumber']; // alias for guessnumber
 
 $args = explode(' ', trim($message));
 
